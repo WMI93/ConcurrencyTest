@@ -65,7 +65,7 @@ public class ConcurrencyTest {
         //Example : the execution will 150-millisecond
         //between the end of the current execution and the start of next one
         ses.scheduleWithFixedDelay(runnableTask, 100, 150, TimeUnit.MILLISECONDS);
-uè
+
     }
 }
 class ExtendsThreadClass extends Thread {}
