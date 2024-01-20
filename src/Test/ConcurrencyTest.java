@@ -3,42 +3,26 @@ package Test;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrencyTest {
-    Object lock1=new Object(); Object lock2=new Object();
+    //EG : comareing between AtomicInteger and Integer
+    static Integer integer =new Integer(0);
+    static AtomicInteger atomicInteger=new AtomicInteger(0);
+
+    static Runnable r1=()->System.out.println("Incremented value of atomic " +
+            "integer is : " + atomicInteger.incrementAndGet());
+
+    static Runnable r2=()->System.out.println("Incremented value of integer " +
+            "is : " + ++integer);
+
     public static void main(String[] args) {
-        ThreadDemo1 t1=new ThreadDemo1();
-        ThreadDemo1 t2=new ThreadDemo1();
-        t1.start();t2.start();
-    }
-
-    private static class ThreadDemo1 extends Thread {
-        public void run() {
-            synchronized (Lock1) {// in ThreadDemo2 1s synchronized(lock2)
-                System.out.println("Thread 2: Holding lock 2 ... ");
-                //    Thread.sleep(10); must be in try/catch(InterruptedException e) block
-                Thread.sleep(10);
-                System.out.println("Thread 2: Waiting for lock 1 ... ");
-                synchronized (Lock2) {// in ThreadDemo2 is synchronized(lock1)
-                    System.out.println("Thread 2: Holding lock 1 & 2 ... ");
-                }
-            }
+    //create three threads each for incrementing atomic and "normal" integers
+        for (int i = 0; i < 5; i++) {
+            new Thread(r1).start();
+            new Thread(r2).start();
         }
-    }
+        CopyOnWriteArrayList
 
-    private static class ThreadDemo2 extends Thread {
-        public void run() {
-            synchronized (Lock2) { // in ThreadDemo1 is synchronized(lock1)
-                System.out.println("Thread 2: Holding lock 2 ... ");
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                }
-                System.out.println("Thread 2: Waiting for lock 1 ... ");
-                synchronized (Lock1) {//// in ThreadDemo1 is synchronized(lock2)
-                    System.out.println("Thread 2: Holding lock 1 & 2 ... ");
-                }
-            }
-        }
     }
 }
